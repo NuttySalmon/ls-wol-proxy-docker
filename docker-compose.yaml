@@ -1,0 +1,59 @@
+# Llama-Swap Wol-Proxy Docker Compose
+
+services:
+  ls-wol-proxy:
+    image: ghcr.io/nuttysalmon/ls-wol-proxy-docker:v1.0.0
+    build:
+      context: .
+      target: ls-wol-proxy
+      dockerfile: Dockerfile
+      args:
+        TARGETOS: linux
+        TARGETARCH: amd64
+
+    # Host mode required for L2 WoL broadcasts
+    network_mode: host
+    restart: unless-stopped
+
+    # Security: drop all; NET_ADMIN required for L2 broadcasts
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN, SETUID, SETGID]
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+    # Mount CA certs here to trust upstream services
+    # volumes:
+    #   - ./cert/upstream.crt:/usr/local/share/ca-certificates/upstream.crt:ro
+
+    # tmpfs required by read_only: true
+    tmpfs:
+      - /tmp:size=10m
+      - /var/log:size=5m
+      - /etc/ssl/certs:size=1m
+
+    # Resource management
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+
+    # Config via .env file
+    environment:
+      - MAC=${LS_WOL_MAC}
+      - UPSTREAM=${LS_WOL_UPSTREAM}
+      - LISTEN=${LS_WOL_LISTEN:-8080}
+      - LOG=${LS_WOL_LOG:-info}
+      - TIMEOUT=${LS_WOL_TIMEOUT:-60}
+
+    # healthcheck:
+    #   test: ["CMD-SHELL", "nc -z localhost $$LISTEN || exit 1"]
+    #   interval: 30s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 5s

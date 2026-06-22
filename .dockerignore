@@ -1,0 +1,15 @@
+# Secrets
+.env
+*.key
+*.crt
+*.pem
+*.p12
+
+# Version Control
+.git
+
+# Project Documentation and Config
+README.md
+Makefile
+docker-compose.yaml
+.env.example

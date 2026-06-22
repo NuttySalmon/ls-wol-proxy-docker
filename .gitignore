@@ -1,0 +1,21 @@
+# Secrets
+.env
+*.key
+*.crt
+*.pem
+*.p12
+
+# Binaries and Build artifacts
+wol-proxy
+dist/
+out/
+
+# Logs
+*.log
+
+# OS and IDE junk
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
