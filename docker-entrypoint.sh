@@ -2,11 +2,11 @@
 set -euo pipefail
 
 # Parse env vars into flags
-MAC="${MAC:-}"
-UPSTREAM="${UPSTREAM:-}"
-TIMEOUT="${TIMEOUT:-60}"
-LISTEN="${LISTEN:-8080}"
-LOG="${LOG:-info}"
+MAC="${MAC:-$LS_WOL_MAC}"
+UPSTREAM="${UPSTREAM:-$LS_WOL_UPSTREAM}"
+TIMEOUT="${TIMEOUT:-${LS_WOL_TIMEOUT:-60}}"
+LISTEN="${LISTEN:-${LS_WOL_LISTEN:-8080}}"
+LOG="${LOG:-${LS_WOL_LOG:-info}}"
 
 # 1. Handle Certificate Injection (Runtime)
 # Users can mount certificates into this directory to trust self-signed upstreams
