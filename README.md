@@ -21,7 +21,7 @@ docker compose up -d
 > --network host is required for L2 WoL broadcasts.
 
 ```bash
-docker run --network host --env-file .env ghcr.io/nuttysalmon/ls-wol-proxy-docker:v0.1.0
+docker run --network host --env-file .env ghcr.io/nuttysalmon/ls-wol-proxy-docker:latest
 ```
 
 ## Configuration
@@ -34,8 +34,10 @@ docker run --network host --env-file .env ghcr.io/nuttysalmon/ls-wol-proxy-docke
 
 ## Security
 
-- **Minimal Attack Surface**: Lightweight Alpine-based image.
-- **Hardened Runtime**: Read-only filesystem with `no-new-privileges` enabled.
+- **Minimal Attack Surface**: Built on a lightweight Alpine image.
+- **Privilege Dropping**: Runs as a non-root user via `su-exec`.
+- **Hardened Runtime**: Uses a read-only filesystem and `no-new-privileges`.
+- **Granular Capabilities**: Only grants necessary capabilities (`NET_ADMIN`, `SETUID`, `SETGID`).
 
 ## Self-Signed Certificates
 
@@ -46,3 +48,15 @@ To trust a self-signed upstream, mount the certificate into the container:
 
 > [!IMPORTANT]
 > Ensure the certificate's Subject Alternative Name (SAN) matches the upstream hostname or IP.
+
+## Verification
+
+Test the proxy with `curl`:
+```bash
+curl http://localhost:8080/v1/models
+```
+
+Check the logs:
+```bash
+docker compose logs -f
+```

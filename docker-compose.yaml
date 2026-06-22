@@ -2,7 +2,7 @@
 
 services:
   ls-wol-proxy:
-    image: ghcr.io/nuttysalmon/ls-wol-proxy-docker:v1.0.0
+    image: ghcr.io/nuttysalmon/ls-wol-proxy-docker:latest
     build:
       context: .
       target: ls-wol-proxy
